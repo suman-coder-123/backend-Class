@@ -159,22 +159,112 @@ async function startServer() {
 
 
 
-    app.post("/add" , async(req , res) => {
-        await usercollection.insertOne({
-            name :req.body.name,
-            age : req.body.age
-        });
+    // app.post("/add" , async(req , res) => {
+    //     await usercollection.insertOne({
+    //         name :req.body.name,
+    //         age : req.body.age
+    //     });
 
-        res.send("data inserted ");
-    });
+    //     res.send("data inserted ");
+    // });
 
 
 
-    app.get("/take" , async(req , res) => {
-        const data = await usercollection.find().toArray();
-        res.json(data);
-    });
+    // app.get("/take" , async(req , res) => {
+    //     const data = await usercollection.find().toArray();
+    //     res.json(data);
+    // });
 
+
+    // to add the single in collection => insertOne 
+    // to add the multiple data in collection => insertMany 
+
+
+//    await usercollection.insertOne({
+//     name :"himani",
+//     age : 22
+//    });
+
+
+
+
+
+
+
+// data  read => get data 
+
+// find() => all data find , fetch 
+// toArray() => multiple data 
+
+
+
+
+
+await usercollection.insertMany([
+    {name : "pooja" , age : 25},
+    {name : "ritu" , age:24}
+])
+
+
+// const data = await 
+// usercollection.find().toArray();
+
+// console.log(data);
+
+
+// const data1 = await usercollection.find({
+//     name : "ritu"
+// }).toArray();
+
+// console.log(data1)
+
+
+// const user  = await 
+// usercollection.findOne({
+//     name: "pooja"
+// });
+
+
+// console.log(user);
+
+
+//////////////////////// update the data 
+
+
+await usercollection.updateOne(
+    {name : "ritu"},
+    {$set : {age : 30}}
+);
+
+
+
+// delete the data 
+
+await usercollection.deleteOne({
+    name:"pooja"
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   
+
+  
     app.listen(3000 , (req , res) => {
     console.log("server starting");
 });
