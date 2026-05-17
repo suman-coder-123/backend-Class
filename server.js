@@ -132,30 +132,30 @@
 
 
 
-const express = require("express");
-const {MongoClient}= require("mongodb");
+// const express = require("express");
+// const {MongoClient}= require("mongodb");
 
-const app = express();
-app.use(express.json());
+// const app = express();
+// app.use(express.json());
 
-app.get("/" , (req , res) => {
-    res.send("server starting on 3000");
-})
+// app.get("/" , (req , res) => {
+//     res.send("server starting on 3000");
+// })
 
 
-const url = "mongodb://127.0.0.1:27017";
-const client = new MongoClient(url);
+// const url = "mongodb://127.0.0.1:27017";
+// const client = new MongoClient(url);
 
-async function startServer() {
+// async function startServer() {
 
-    await client.connect();
-    console.log("mongodb connected ");
+//     await client.connect();
+//     console.log("mongodb connected ");
 
-    const db  = client.db("firstServer");
-    console.log("database connected ");
+//     const db  = client.db("firstServer");
+//     console.log("database connected ");
 
-    const usercollection  = db.collection("firstcolc");
-    console.log("collection created");
+//     const usercollection  = db.collection("firstcolc");
+//     console.log("collection created");
 
 
 
@@ -200,10 +200,10 @@ async function startServer() {
 
 
 
-await usercollection.insertMany([
-    {name : "pooja" , age : 25},
-    {name : "ritu" , age:24}
-])
+// await usercollection.insertMany([
+//     {name : "pooja" , age : 25},
+//     {name : "ritu" , age:24}
+// ])
 
 
 // const data = await 
@@ -231,18 +231,18 @@ await usercollection.insertMany([
 //////////////////////// update the data 
 
 
-await usercollection.updateOne(
-    {name : "ritu"},
-    {$set : {age : 30}}
-);
+// await usercollection.updateOne(
+//     {name : "ritu"},
+//     {$set : {age : 30}}
+// );
 
 
 
-// delete the data 
+// // delete the data 
 
-await usercollection.deleteOne({
-    name:"pooja"
-});
+// await usercollection.deleteOne({
+//     name:"pooja"
+// });
 
 
 
@@ -265,22 +265,83 @@ await usercollection.deleteOne({
    
 
   
-    app.listen(3000 , (req , res) => {
-    console.log("server starting");
+//     app.listen(3000 , (req , res) => {
+//     console.log("server starting");
+// });
+
+// }
+
+
+// startServer();
+
+
+
+// -------------------------------------------------------------------------------
+
+
+
+
+
+const express = require("express");
+const {MongoClient}= require("mongodb");
+const path = require("path");
+const app = express();
+app.use(express.urlencoded({extended:true}));
+
+// html = ejs setup 
+app.set("view engine" , "ejs");
+
+// app.get("/" , (req , res) => {
+//     res.send("server starting on 3000");
+// })
+
+
+const url = "mongodb://127.0.0.1:27017";
+const client = new MongoClient(url);
+
+
+async function start() {
+    await client.connect();
+
+    console.log("mongodb connected");
+
+    const db = client.db("mydatabase");
+
+    const user = db.collection("user");
+
+
+
+
+    // get method => data show 
+
+
+    app.get("/", async(req , res) => {
+        const data = await user.find().toArray();
+        res.render("home" , {
+            users:data
+        });
+    });
+
+// add user = post method 
+
+app.post("/add" , async (req , res) => {
+    await user.insertOne({
+        name : req.body.name,
+        phone : req.body.phone
+    });
+
+    res.redirect("/");
+});
+
+
+app.listen(3000 , () => {
+    console.log("server running ");
 });
 
 }
 
 
-startServer();
-
-
-
-
-
-
-
-
+start();
 
 
 
